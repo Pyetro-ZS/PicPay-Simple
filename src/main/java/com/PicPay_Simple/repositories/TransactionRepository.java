@@ -1,7 +1,8 @@
 package com.PicPay_Simple.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.PicPay_Simple.domain.transaction.Transaction;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TrasactionRepository extends JpaRepository<Transaction, Long> {
+public interface TransactionRepository extends JpaRepository<Transaction, Long>
+{
 }
