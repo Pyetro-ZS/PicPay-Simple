@@ -10,9 +10,6 @@ Java • Spring Boot • JPA • Maven • MySQL/H2
 - Simular transações com validação de saldo
 - Tratamento de erros com mensagens claras
 
-## Rodando localmente
-…comandos…
-
 ## Endpoints
 - POST /users
 - GET /users
