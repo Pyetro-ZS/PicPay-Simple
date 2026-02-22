@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -30,13 +31,13 @@ public class TransactionService {
     private NotificationService notificationService;
 
     public Transaction createTransaction(TransactionDTO transaction) throws Exception {
-        User sender = this.userService.findUserById(transaction.sanderId());
+        User sender = this.userService.findUserById(transaction.senderId());
         User receiver = this.userService.findUserById(transaction.receiverId());
 
         userService.validateTransaction(sender, transaction.value());
 
         boolean isAuthorized = this.authorizeTransaction(sender, transaction.value());
-        if (this.authorizeTransaction(sender, transaction.value())) {
+        if (!isAuthorized) {
             throw new Exception("Transação não autorizada.");
         }
 
@@ -53,16 +54,15 @@ public class TransactionService {
         this.userService.saveUser(sender);
         this.userService.saveUser(receiver);
 
-        this.notificationService.sendNotification(sender, "Transação realizada com sucesso. Valor: " + transaction.value());
-        this.notificationService.sendNotification(receiver, "Transação Recebida com sucesso. Valor: " + transaction.value());
-
+        this.notificationService.sendNotification(sender, "Transação realizada com sucesso.");
+        this.notificationService.sendNotification(receiver, "Transação Recebida com sucesso.");
 
         return newTransaction;
     }
 
 
     public boolean authorizeTransaction(User sender, BigDecimal value) {
-        ResponseEntity<Map> authorizationResponse = restTemplate.getForEntity("https://run.mocky.io/v3/8fafdd68-a098-496f-8c9a-344cf30dae6", Map.class);
+        ResponseEntity<Map> authorizationResponse = restTemplate.getForEntity("https://mocki.io/v1/1025662f-d437-4f85-b246-7c651a13f5cf", Map.class);
 
         if (authorizationResponse.getStatusCode() == HttpStatus.OK) {
             String massage = (String) authorizationResponse.getBody().get("message");
