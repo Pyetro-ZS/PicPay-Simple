@@ -14,6 +14,3 @@ Java • Spring Boot • JPA • Maven • MySQL/H2
 - POST /users
 - GET /users
 - POST /transactions
-
-## Exemplos de respostas
-…
